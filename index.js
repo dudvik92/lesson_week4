@@ -11,5 +11,3 @@ const app = appSrc(express, bodyParser, createReadStream, crypto, http);
 
 app.listen(process.env.PORT || 3000);
 
-export {app, bodyParser, createReadStream, crypto, http}; 
-
