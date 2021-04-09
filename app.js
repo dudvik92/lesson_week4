@@ -23,7 +23,7 @@ import('./index.js')
     .use((req, res, next) => res.status(200).set(CORS) && next())
     .use(module.bodyParser.urlencoded({extended: true}))
     .get(/login/, (req, res) => {res.send('dudvik')})
-    .get(/code/, (req, res) => module.createReadStream(import.meta.url.substring(10)).pipe(res))
+    .get(/code/, (req, res) => module.createReadStream(import.meta.url.substring(7)).pipe(res))
     .get('/sha1/:input/', r => {
         hash.update(r.params.input);
         r.res.send(hash.digest('hex'))})
