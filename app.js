@@ -4,10 +4,12 @@ const CORS = {
     'Access-Control-Allow-Headers': 'x-test, Content-Type, Accept, Access-Control-Allow-Headers'
   };
 
-export default function appSrc(express, bodyParser, createReadStream, crypto, http) 
+export default function appSrc(express, bodyParser, createReadStream, crypto, http, mongo) 
 {
     const app = express();
     const server = http.createServer(app);
+    const {MongoClient: {connect}} = mongo;
+    
     let hash = crypto.createHash('sha1');   
     app
     .use((req, res, next) => res.status(200).set(CORS) && next())
@@ -36,8 +38,18 @@ export default function appSrc(express, bodyParser, createReadStream, crypto, ht
             resp.on('data', (chunk) => { rawData += chunk; });
             resp.on('end', () => {r.res.send(rawData);})
             })
-
+    
     })
+    
+    .post('/insert', async r => {
+      let log = r.body.login;
+      let pas = r.body.password;
+      let URL = r.body.URL;
+      const conn = await connect (URL, {useNewUrlParser: true, useUnifiedTopology: true});
+      const db = conn.db('readusers');
+      const result = await db.collection('users').insertOne({login: log, password: pas});
+    })
+    
     .all(/./, (req, res) => {res.send('dudvik')});
     return app;
 }
